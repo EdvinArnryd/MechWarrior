@@ -3,13 +3,20 @@ using Events;
 
 public class PauseManager : MonoBehaviour
 {
-    public GameObject pauseMenuUI; // Assign in Inspector
-
+    public GameObject pauseMenuUI;
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            EventHandler.Main.PushEvent(new PauseEvent(pauseMenuUI));
+            if (EventHandler.Main.CurrentEvent is PauseEvent pauseEvent)
+            {
+                EventHandler.Main.RemoveEvent(pauseEvent);
+            }
+            else
+            {
+                EventHandler.Main.PushEvent(new PauseEvent(pauseMenuUI));
+            }
         }
     }
 }

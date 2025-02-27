@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Events;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,6 +39,10 @@ namespace Game
         protected override void Update()
         {
             // move forward
+            if (EventHandler.Main.CurrentEvent is PauseEvent)
+            {
+                return;
+            }
             Pose moveTarget = MoveTarget;
             m_fVelocity = Mathf.MoveTowards(m_fVelocity, Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) ? 8.0f : 0.0f, Time.deltaTime * 6.0f);
             moveTarget.position = transform.position + m_fVelocity * transform.forward;
@@ -66,10 +71,11 @@ namespace Game
             }
 
             // mouse look
+            
             Vector2 vMouseDelta = (Vector2)Input.mousePosition - m_vLastMouse;
             m_vLastMouse = Input.mousePosition;
             m_vLocalLook.y += (vMouseDelta.x / Screen.width) * 100.0f;
-            m_vLocalLook.x += (vMouseDelta.y / Screen.height) * 100.0f;
+            m_vLocalLook.x -= (vMouseDelta.y / Screen.height) * 100.0f;
             m_vLocalLook.x = Mathf.Clamp(m_vLocalLook.x, -30.0f, 30.0f);
             m_vLocalLook.y = Mathf.Clamp(m_vLocalLook.y, -20.0f, 20.0f);
             m_mainBody.localEulerAngles = m_vLocalLook;

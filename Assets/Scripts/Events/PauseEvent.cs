@@ -4,7 +4,6 @@ using Events;
 public class PauseEvent : EventHandler.GameEvent
 {
     private GameObject pauseMenuUI;
-    private bool isPaused = false;
 
     public PauseEvent(GameObject ui)
     {
@@ -13,32 +12,27 @@ public class PauseEvent : EventHandler.GameEvent
 
     public override void OnBegin(bool bFirstTime)
     {
-        if (!isPaused)
-        {
-            Time.timeScale = 0f; // Pause game
-            pauseMenuUI.SetActive(true); // Show UI
-            isPaused = true;
-            Debug.Log("Game Paused");
-        }
-    }
+        Time.timeScale = 0f; // Pause game
+        pauseMenuUI.SetActive(true); // Show UI
 
-    public override void OnUpdate()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape)) // Unpause on ESC
-        {
-            isPaused = false;
-        }
+        // Unlock and show cursor when paused
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public override void OnEnd()
     {
         Time.timeScale = 1f; // Resume game
         pauseMenuUI.SetActive(false); // Hide UI
-        Debug.Log("Game Resumed");
+
+        // Lock and hide cursor when resuming
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
+
 
     public override bool IsDone()
     {
-        return !isPaused; // Event ends when unpaused
+        return false;
     }
 }
