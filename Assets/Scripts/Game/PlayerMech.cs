@@ -34,15 +34,25 @@ namespace Game
             m_mainBody = transform.Find("Pelvis/MainBody");
             m_shoulderPacks = GetComponentsInChildren<ShoulderPack>();
             m_missileLock = GetComponentInChildren<Text>();     // UGLY
+            Cursor.visible = false;
         }
 
         protected override void Update()
         {
-            // move forward
+            //Returns if PauseEvent is true
             if (EventHandler.Main.CurrentEvent is PauseEvent)
             {
                 return;
             }
+
+            //Trigger slowmotion event if the f-key is pressed
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                //Puse the slowmotion event to the action stack
+                EventHandler.Main.PushEvent(new SlowMotionEvent(3f, 0.2f));
+            }
+            
+            
             Pose moveTarget = MoveTarget;
             m_fVelocity = Mathf.MoveTowards(m_fVelocity, Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) ? 8.0f : 0.0f, Time.deltaTime * 6.0f);
             moveTarget.position = transform.position + m_fVelocity * transform.forward;

@@ -1,38 +1,38 @@
 using UnityEngine;
-using Events;
 
-public class PauseEvent : EventHandler.GameEvent
+namespace Events
+
 {
-    private GameObject pauseMenuUI;
-
-    public PauseEvent(GameObject ui)
+    public class PauseEvent : EventHandler.GameEvent
     {
-        pauseMenuUI = ui;
-    }
+        // Get the UI Panel
+        private GameObject pauseMenuUI;
 
-    public override void OnBegin(bool bFirstTime)
-    {
-        Time.timeScale = 0f; // Pause game
-        pauseMenuUI.SetActive(true); // Show UI
+        public PauseEvent(GameObject ui)
+        {
+            // Set UI
+            pauseMenuUI = ui;
+        }
 
-        // Unlock and show cursor when paused
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
+        public override void OnBegin(bool bFirstTime)
+        {
+            //set timescale to 0 to pause the game
+            Time.timeScale = 0f;
+            pauseMenuUI.SetActive(true);
+        }
 
-    public override void OnEnd()
-    {
-        Time.timeScale = 1f; // Resume game
-        pauseMenuUI.SetActive(false); // Hide UI
-
-        // Lock and hide cursor when resuming
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+        public override void OnEnd()
+        {
+            //Start unpause the game
+            Time.timeScale = 1f;
+            pauseMenuUI.SetActive(false);
+        }
 
 
-    public override bool IsDone()
-    {
-        return false;
+        public override bool IsDone()
+        {
+            //return false to not automatically remove itself
+            return false;
+        }
     }
 }
